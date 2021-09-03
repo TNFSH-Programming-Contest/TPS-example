@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
 
     steps:
       - uses: actions/checkout@v2
@@ -43,6 +43,7 @@ jobs:
       - name: Check environment
         working-directory: Arithmetic
         run: |
+          lsb_release -a
           pandoc -v
           xetex -v
           tps
