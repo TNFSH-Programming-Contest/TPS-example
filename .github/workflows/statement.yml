@@ -24,6 +24,8 @@ jobs:
 
       - name: Install xetex
         run: |
+          sudo add-apt-repository ppa:jonathonf/texlive-2019
+          sudo apt-get update
           sudo apt-get install texlive-xetex
 
       - name: Install fonts
@@ -44,10 +46,13 @@ jobs:
         working-directory: Arithmetic
         run: |
           lsb_release -a
+          echo ""
           pandoc -v
+          echo ""
           xetex -v
+          echo ""
           tps || :;
-          echo "Noto Sans Mono CJK TC"
+          echo ""
           fc-list | grep "Noto Sans Mono CJK TC" || :;
 
       - name: Build statement
