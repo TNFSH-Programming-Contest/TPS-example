@@ -2,7 +2,23 @@ name: Build statement
 
 on:
   push:
+    paths:
+      - '.github/workflows/statement.yml'
+      - 'Arithmetic/scripts/statement.sh'
+      - 'Arithmetic/statement/*.jpg'
+      - 'Arithmetic/statement/index.md'
+      - 'Arithmetic/problem.json'
+      - 'Arithmetic/subtasks.json'
+      - 'template.tex'
   pull_request:
+    paths:
+      - '.github/workflows/statement.yml'
+      - 'Arithmetic/scripts/statement.sh'
+      - 'Arithmetic/statement/*.jpg'
+      - 'Arithmetic/statement/index.md'
+      - 'Arithmetic/problem.json'
+      - 'Arithmetic/subtasks.json'
+      - 'template.tex'
   workflow_dispatch:
 
 jobs:
