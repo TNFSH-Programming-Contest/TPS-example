@@ -19,9 +19,28 @@ jobs:
           sudo apt-get install texlive-xetex
           xetex -v
 
+      - name: Install fonts
+        run: |
+          sudo mkdir -p /usr/share/fonts/opentype/noto
+          wget https://noto-website-2.storage.googleapis.com/pkgs/NotoSansCJK-Regular.ttc.zip
+          unzip NotoSansCJK-Regular.ttc.zip -d NotoSansCJK-Regular
+          ls NotoSansCJK-Regular
+          sudo cp NotoSansCJK-Regular/NotoSansCJK-Regular.ttc /usr/share/fonts/opentype/noto
+          wget https://noto-website-2.storage.googleapis.com/pkgs/NotoSansCJK-Bold.ttc.zip
+          unzip NotoSansCJK-Bold.ttc.zip -d NotoSansCJK-Bold
+          ls NotoSansCJK-Bold
+          sudo cp NotoSansCJK-Bold/NotoSansCJK-Bold.ttc /usr/share/fonts/opentype/noto
+          ls /usr/share/fonts/opentype/noto
+          sudo fc-cache -f -v
+
       - name: Check fonts
         run: |
           echo "Noto Sans Mono CJK TC"
           fc-list | grep "Noto Sans Mono CJK TC" || :;
           echo "Noto Sans CJK TC"
           fc-list | grep "Noto Sans CJK TC" || :;
+
+      - name: Build statement
+        working-directory: Arithmetic
+        run: |
+          tps statement
