@@ -19,6 +19,11 @@ jobs:
           sudo apt-get install texlive-xetex
           xetex -v
 
+      - name: Install fc-list
+        run: |
+          sudo apt-get install fc-list
+          fc-list -V
+
       - name: Check fonts
         run: |
           fc-list | grep "Noto Sans Mono CJK TC"
