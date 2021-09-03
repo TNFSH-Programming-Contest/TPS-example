@@ -22,15 +22,15 @@ jobs:
       - name: Install fonts
         run: |
           sudo mkdir -p /usr/share/fonts/opentype/noto
-          wget https://noto-website-2.storage.googleapis.com/pkgs/NotoSansCJK-Regular.ttc.zip
+          wget -nv https://noto-website-2.storage.googleapis.com/pkgs/NotoSansCJK-Regular.ttc.zip
           unzip NotoSansCJK-Regular.ttc.zip -d NotoSansCJK-Regular
-          ls NotoSansCJK-Regular
+          ls -al NotoSansCJK-Regular
           sudo cp NotoSansCJK-Regular/NotoSansCJK-Regular.ttc /usr/share/fonts/opentype/noto
-          wget https://noto-website-2.storage.googleapis.com/pkgs/NotoSansCJK-Bold.ttc.zip
+          wget -nv https://noto-website-2.storage.googleapis.com/pkgs/NotoSansCJK-Bold.ttc.zip
           unzip NotoSansCJK-Bold.ttc.zip -d NotoSansCJK-Bold
-          ls NotoSansCJK-Bold
+          ls -al NotoSansCJK-Bold
           sudo cp NotoSansCJK-Bold/NotoSansCJK-Bold.ttc /usr/share/fonts/opentype/noto
-          ls /usr/share/fonts/opentype/noto
+          ls -al /usr/share/fonts/opentype/noto
           sudo fc-cache -f -v
 
       - name: Check fonts
@@ -39,6 +39,11 @@ jobs:
           fc-list | grep "Noto Sans Mono CJK TC" || :;
           echo "Noto Sans CJK TC"
           fc-list | grep "Noto Sans CJK TC" || :;
+
+      - name: Install tps
+        run: |
+          git clone https://github.com/ioi-2017/tps.git
+          cd tps && sudo ./install-tps.sh
 
       - name: Build statement
         working-directory: Arithmetic
