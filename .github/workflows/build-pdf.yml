@@ -87,10 +87,10 @@ jobs:
           tps statement
 
       - name: Merge pdfs
-        if: steps.changes.outputs.pA == 'true' || steps.changes.outputs.template == 'true'
+        if: steps.changes.outputs.Arithmetic == 'true' || steps.changes.outputs.template == 'true'
         run: |
-          mkdir -p pA/attachments
-          pdfunite pA/statement/index.pdf pA/attachments/problems.pdf
+          mkdir -p Arithmetic/attachments
+          pdfunite Arithmetic/statement/index.pdf Arithmetic/attachments/problems.pdf
 
       - name: Commit pdf
         run: |
@@ -98,7 +98,7 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git status
           git add Arithmetic/statement/index.pdf
-          git add pA/attachments/problems.pdf
+          git add Arithmetic/attachments/problems.pdf
           git diff-index --quiet HEAD -- || git commit -m "Build statement"
 
       - name: Push to GitHub
