@@ -14,9 +14,12 @@ jobs:
           wget https://github.com/jgm/pandoc/releases/download/2.10.1/pandoc-2.10.1-1-amd64.deb
           sudo dpkg -i pandoc-2.10.1-1-amd64.deb
 
-      - name: Check environment
+      - name: Install xetex
         run: |
-          pandoc -v
+          sudo apt-get install texlive-xetex
           xetex -v
+
+      - name: Check fonts
+        run: |
           fc-list | grep "Noto Sans Mono CJK TC"
           fc-list | grep "Noto Sans CJK TC"
