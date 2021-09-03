@@ -1,0 +1,23 @@
+name: Build statement
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Check environment
+        run: |
+          pandoc -v
+          xetex -v
+          fc-list | grep "Noto Sans Mono CJK TC"
+          fc-list | grep "Noto Sans CJK TC"
