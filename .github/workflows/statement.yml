@@ -21,7 +21,7 @@ jobs:
 
       - name: Install fc-list
         run: |
-          sudo apt-get install fc-list
+          sudo apt-get install fontconfig
           fc-list -V
 
       - name: Check fonts
