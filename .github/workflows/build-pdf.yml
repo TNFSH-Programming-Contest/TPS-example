@@ -1,9 +1,8 @@
-name: Build statement
+name: Build pdf
 
 on:
   push:
     paths:
-      - '.github/workflows/statement.yml'
       - 'Arithmetic/scripts/statement.sh'
       - 'Arithmetic/statement/*.jpg'
       - 'Arithmetic/statement/index.md'
@@ -49,6 +48,10 @@ jobs:
           ls -al /usr/share/fonts/opentype/noto
           sudo fc-cache -f -v
 
+      - name: Install pdfunite
+        run: |
+          sudo apt-get install poppler-utils
+
       - name: Check environment
         working-directory: Arithmetic
         run: |
@@ -61,11 +64,33 @@ jobs:
           tps || :;
           echo ""
           fc-list | grep "Noto Sans Mono CJK TC" || :;
+          echo ""
+          pdfunite -v
 
-      - name: Build statement
+      - uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: |
+            template:
+              - 'template.tex'
+            Arithmetic:
+              - 'Arithmetic/scripts/statement.sh'
+              - 'Arithmetic/statement/*.jpg'
+              - 'Arithmetic/statement/index.md'
+              - 'Arithmetic/problem.json'
+              - 'Arithmetic/subtasks.json'
+
+      - name: Build Arithmetic
+        if: steps.changes.outputs.Arithmetic == 'true' || steps.changes.outputs.template == 'true'
         working-directory: Arithmetic
         run: |
           tps statement
+
+      - name: Merge pdfs
+        if: steps.changes.outputs.pA == 'true' || steps.changes.outputs.template == 'true'
+        run: |
+          mkdir -p pA/attachments
+          pdfunite pA/statement/index.pdf pA/attachments/problems.pdf
 
       - name: Commit pdf
         run: |
@@ -73,6 +98,7 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git status
           git add Arithmetic/statement/index.pdf
+          git add pA/attachments/problems.pdf
           git diff-index --quiet HEAD -- || git commit -m "Build statement"
 
       - name: Push to GitHub
