@@ -99,5 +99,6 @@ jobs:
           git status
           git add Arithmetic/statement/index.pdf
           git add Arithmetic/attachments/problems.pdf
+          git pull
           git diff-index --quiet HEAD -- || git commit -m "Build statement"
           git push

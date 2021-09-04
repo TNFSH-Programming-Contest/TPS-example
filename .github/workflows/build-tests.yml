@@ -54,5 +54,6 @@ jobs:
 
       - name: Commit tests and push
         run: |
+          git pull
           git diff-index --quiet HEAD -- || git commit -m "Build tests"
           git push
