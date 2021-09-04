@@ -52,12 +52,7 @@ jobs:
           git add tests/gen_summary
           git add tests/mapping
 
-      - name: Commit tests
+      - name: Commit tests and push
         run: |
           git diff-index --quiet HEAD -- || git commit -m "Build tests"
-
-      - name: Push to GitHub
-        uses: ad-m/github-push-action@v0.6.0
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.ref }}
+          git push
