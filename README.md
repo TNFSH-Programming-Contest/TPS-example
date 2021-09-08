@@ -86,10 +86,10 @@ gen norm -1000000000 1000000000 jvnyj
 }
 ```
 其他解法是否設定於`solutions.json`皆無所謂。  
-`verdict`值可參閱[官方說明](https://github.com/ioi-2017/tps/tree/master/docs#solutionsjson)。  
+`verdict`值可參閱[官方說明](https://github.com/ioi-2017/tps/tree/master/docs#solutionsjson)或[is_verdict_expected函數](https://github.com/TNFSH-Programming-Contest/TPS-example/blob/db176229342bb3bbd8e328ae73f189029a8ca1bf/pA/scripts/internal/invoke.py#L18)。  
 
 ## [checker/](pA/checker/)
-因為TPS沒有提供CMS所使用的white-diff checker，本範例提供完全相符比較的checker（比CMS嚴格），該檔案不會匯入到CMS中（務必使用[TFcis/cms](https://github.com/TFcis/cms)及在`problem.json`中設定`"ignore_checker": true`）。  
+TPS預設使用[`diff -bq`](http://man.he.net/man1/diff)來檢查輸出是否正確，CMS可能使用不同的檢查指令，請在`problem.json`中設定`"has_checker": false`。如果要自己編寫checker，請設定`"has_checker": true`。  
 
 ## 資料夾結構
 每題中包含以下目錄和檔案：
