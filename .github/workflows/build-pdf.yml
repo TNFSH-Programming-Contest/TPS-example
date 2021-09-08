@@ -3,13 +3,17 @@ name: Build pdf
 on:
   push:
     paths:
-      - 'pA/scripts/statement.sh'
-      - 'pA/statement/*.jpg'
-      - 'pA/statement/index.md'
-      - 'pA/problem.json'
-      - 'pA/subtasks.json'
+      - '*/scripts/statement.sh'
+      - '*/statement/*.jpg'
+      - '*/statement/index.md'
+      - '*/problem.json'
+      - '*/subtasks.json'
       - 'template.tex'
   workflow_dispatch:
+    inputs:
+        target:
+            description: 'Problem labels to build'
+            default: 'A'
 
 jobs:
   build:
@@ -81,18 +85,17 @@ jobs:
               - 'pA/subtasks.json'
 
       - name: Build pA
-        if: steps.changes.outputs.pA == 'true' || steps.changes.outputs.template == 'true'
+        if: (github.event_name != 'workflow_dispatch' && (steps.changes.outputs.pA == 'true' || steps.changes.outputs.template == 'true')) || contains(github.event.inputs.target, 'A')
         working-directory: pA
         run: |
           tps statement
 
       - name: Merge pdfs
-        if: steps.changes.outputs.pA == 'true' || steps.changes.outputs.template == 'true'
         run: |
           mkdir -p pA/attachments
           pdfunite pA/statement/index.pdf pA/attachments/problems.pdf
 
-      - name: Commit pdf and push
+      - name: Commit pdf
         run: |
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
@@ -100,5 +103,5 @@ jobs:
           git add pA/statement/index.pdf
           git add pA/attachments/problems.pdf
           git pull
-          git diff-index --quiet HEAD -- || git commit -m "Build statement"
+          git diff-index --quiet HEAD -- || git commit -m "Build pdf"
           git push
