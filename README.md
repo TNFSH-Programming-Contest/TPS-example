@@ -1,30 +1,30 @@
 # TPS範例題目
 
 ## Quick Links
-[problems.pdf](Arithmetic/attachments/problems.pdf)
+[problems.pdf](pA/attachments/problems.pdf)
 
 | ID | gen | solution | tests | statement | validator | config |
 | --- | --- | --- | --- | --- | --- | --- |
-| A. Arithmetic | [gen](Arithmetic/gen) | [solution](Arithmetic/solution) [check](Arithmetic/solutions-check.txt) | [tests](Arithmetic/tests) | [statement](Arithmetic/statement) [markdown](Arithmetic/statement/index.md) [pdf](Arithmetic/statement/index.pdf) | [validator](Arithmetic/validator) |[problem](Arithmetic/problem.json) [solutions](Arithmetic/solutions.json) [subtasks](Arithmetic/subtasks.json) |
+| A. pA | [gen](pA/gen) | [solution](pA/solution) [check](pA/solutions-check.txt) | [tests](pA/tests) | [statement](pA/statement) [markdown](pA/statement/index.md) [pdf](pA/statement/index.pdf) | [validator](pA/validator) |[problem](pA/problem.json) [solutions](pA/solutions.json) [subtasks](pA/subtasks.json) |
 
 # 操作說明
-## 題目設定、[problem.json](Arithmetic/problem.json)
+## 題目設定、[problem.json](pA/problem.json)
 | 參數 | 範例值 | 設定位置 |
 | --- | --- | --- |
-| 競賽名稱 | TPS範例題目 | [problem.json](Arithmetic/problem.json)的`contest_name`欄位（所有題目皆需設定） |
-| 題目編號 | A | [problem.json](Arithmetic/problem.json)的`problem_label`欄位 |
-| 題目代號 | Arithmetic | [problem.json](Arithmetic/problem.json)的`name`和`code`欄位 |
-| 題目名稱 | 四則運算 | [problem.json](Arithmetic/problem.json)的`title`欄位 |
-| 時間限制 | 1 秒 | [problem.json](Arithmetic/problem.json)的`time_limit`欄位 |
-| 記憶體限制 | 512 MB | [problem.json](Arithmetic/problem.json)的`memory_limit`欄位 |
-| 上傳間隔 | 120 秒 | [problem.json](Arithmetic/problem.json)的`min_submission_interval`欄位 |
+| 競賽名稱 | TPS範例題目 | [problem.json](pA/problem.json)的`contest_name`欄位（所有題目皆需設定） |
+| 題目編號 | A | [problem.json](pA/problem.json)的`problem_label`欄位 |
+| 題目代號 | pA | [problem.json](pA/problem.json)的`name`和`code`欄位 |
+| 題目名稱 | 四則運算 | [problem.json](pA/problem.json)的`title`欄位 |
+| 時間限制 | 1 秒 | [problem.json](pA/problem.json)的`time_limit`欄位 |
+| 記憶體限制 | 512 MB | [problem.json](pA/problem.json)的`memory_limit`欄位 |
+| 上傳間隔 | 120 秒 | [problem.json](pA/problem.json)的`min_submission_interval`欄位 |
 
-## 題本、[statement/](Arithmetic/statement/)
-題本使用Markdown撰寫並置於[statement/index.md](Arithmetic/statement/index.md)，格式請參照該連結。  
+## 題本、[statement/](pA/statement/)
+題本使用Markdown撰寫並置於[statement/index.md](pA/statement/index.md)，格式請參照該連結。  
 切到題目目錄底下後使用`tps statement`指令產生PDF檔。
 
-## 子任務配分、[subtasks.json](Arithmetic/subtasks.json)
-子任務配分設定於[subtasks.json](Arithmetic/subtasks.json)。格式如下範例：  
+## 子任務配分、[subtasks.json](pA/subtasks.json)
+子任務配分設定於[subtasks.json](pA/subtasks.json)。格式如下範例：  
 ```json
 {
     "global_validators": ["validator.cpp"],
@@ -44,11 +44,11 @@
 ```
 `subtasks`底下的Key為各測資名稱（如`task1`），`score`為該測資的分數。  
 
-## 產生測資、[gen/](Arithmetic/gen/)、[gen/data](Arithmetic/gen/data)
-產生測資的程式應置於[gen/](Arithmetic/gen/)下。  
+## 產生測資、[gen/](pA/gen/)、[gen/data](pA/gen/data)
+產生測資的程式應置於[gen/](pA/gen/)下。  
 以下說明適用於符合TPS產測方式的作法。  
 產測程式根據**命令行參數**來產生不同測資，該程式產生測資必須使用**標準輸出（stdout）**，不能是檔案輸出。  
-在[gen/data](Arithmetic/gen/data)設定各子任務所使用的程式名稱及參數。  
+在[gen/data](pA/gen/data)設定各子任務所使用的程式名稱及參數。  
 每一行代表一個測資點，使用`@subtask 測資名稱`區分不同子任務，測資名稱不可有空白，並且應跟`subtasks.json`內相同。範例如下：  
 ``` 
 @subtask sample
@@ -64,20 +64,20 @@ gen norm 0 10000 csizh
 manual all-01.in
 gen norm -1000000000 1000000000 jvnyj
 ```
-如果需要手動產生測資，將測資檔放置於[gen/manual](Arithmetic/gen/manual)，然後在`gen/data`寫入一行`manual 測資檔名稱`。  
-切到題目目錄底下後使用`tps gen`指令產生測資檔於[tests](Arithmetic/tests)。  
+如果需要手動產生測資，將測資檔放置於[gen/manual](pA/gen/manual)，然後在`gen/data`寫入一行`manual 測資檔名稱`。  
+切到題目目錄底下後使用`tps gen`指令產生測資檔於[tests](pA/tests)。  
 
-## 驗測程式、[validator/](Arithmetic/validator/)
-驗證測資**數值範圍**、圖論題是否為一棵樹、是否連通等題目所給定的限制（與解題演算法無關）屬於驗測程式範疇，放置於[validator/](Arithmetic/validator/)資料夾下。  
-並在[subtasks.json](Arithmetic/subtasks.json)設定要使用哪個驗測程式。  
+## 驗測程式、[validator/](pA/validator/)
+驗證測資**數值範圍**、圖論題是否為一棵樹、是否連通等題目所給定的限制（與解題演算法無關）屬於驗測程式範疇，放置於[validator/](pA/validator/)資料夾下。  
+並在[subtasks.json](pA/subtasks.json)設定要使用哪個驗測程式。  
 所有子任務都使用的設定於`subtasks.json`的`global_validators`。  
 單一子任務使用的則設定於對應子任務下的`validators`。  
 
 測試不同演算法**是否會TLE、得到哪些部分分數**的程式應視為**標程**，請參閱標程說明。  
 
-## 標程、[solution/](Arithmetic/solution/)、[solutions.json](Arithmetic/solutions.json)
-將標程及其他拿部分分的解法都放在[solutions/](Arithmetic/solutions/)底下。  
-並在[solutions.json](Arithmetic/solutions.json)設定標程如以下格式：  
+## 標程、[solution/](pA/solution/)、[solutions.json](pA/solutions.json)
+將標程及其他拿部分分的解法都放在[solutions/](pA/solutions/)底下。  
+並在[solutions.json](pA/solutions.json)設定標程如以下格式：  
 ```json
 {
 	"filename.cpp": {
@@ -88,7 +88,7 @@ gen norm -1000000000 1000000000 jvnyj
 其他解法是否設定於`solutions.json`皆無所謂。  
 `verdict`值可參閱[官方說明](https://github.com/ioi-2017/tps/tree/master/docs#solutionsjson)。  
 
-## [checker/](Arithmetic/checker/)
+## [checker/](pA/checker/)
 因為TPS沒有提供CMS所使用的white-diff checker，本範例提供完全相符比較的checker（比CMS嚴格），該檔案不會匯入到CMS中（務必使用[TFcis/cms](https://github.com/TFcis/cms)及在`problem.json`中設定`"ignore_checker": true`）。  
 
 ## 資料夾結構
@@ -98,7 +98,7 @@ gen norm -1000000000 1000000000 jvnyj
  - gen/data: 測資產生指令，參見[TPS的說明](https://github.com/ioi-2017/tps/tree/master/docs#gendata)
  - scripts: TPS所使用的腳本
  - solution: 標程及其他解法程式碼（包含所有拿部分分的程式碼），不要跟 validator 搞混
- - solution/check.txt: 所有標程對於所有測資的執行狀況（包含是否WA、TLE），使用指令 `make arithmetic-check`，參見[Makefile](Makefile)
+ - solution/check.txt: 所有標程對於所有測資的執行狀況（包含是否WA、TLE），使用指令 `make pA-check`，參見[Makefile](Makefile)
  - statement: 題本
  - statement/index.md: （TPS格式）markdown 格式的題目敘述，之後會以 pandoc 輸出成 PDF
  - statement/index.pdf: （TPS格式）用 `tps statement` 輸出的 PDF 題目敘述

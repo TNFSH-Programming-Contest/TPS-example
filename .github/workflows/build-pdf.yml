@@ -3,11 +3,11 @@ name: Build pdf
 on:
   push:
     paths:
-      - 'Arithmetic/scripts/statement.sh'
-      - 'Arithmetic/statement/*.jpg'
-      - 'Arithmetic/statement/index.md'
-      - 'Arithmetic/problem.json'
-      - 'Arithmetic/subtasks.json'
+      - 'pA/scripts/statement.sh'
+      - 'pA/statement/*.jpg'
+      - 'pA/statement/index.md'
+      - 'pA/problem.json'
+      - 'pA/subtasks.json'
       - 'template.tex'
   workflow_dispatch:
 
@@ -53,7 +53,7 @@ jobs:
           sudo apt-get install poppler-utils
 
       - name: Check environment
-        working-directory: Arithmetic
+        working-directory: pA
         run: |
           lsb_release -a
           echo ""
@@ -73,32 +73,32 @@ jobs:
           filters: |
             template:
               - 'template.tex'
-            Arithmetic:
-              - 'Arithmetic/scripts/statement.sh'
-              - 'Arithmetic/statement/*.jpg'
-              - 'Arithmetic/statement/index.md'
-              - 'Arithmetic/problem.json'
-              - 'Arithmetic/subtasks.json'
+            pA:
+              - 'pA/scripts/statement.sh'
+              - 'pA/statement/*.jpg'
+              - 'pA/statement/index.md'
+              - 'pA/problem.json'
+              - 'pA/subtasks.json'
 
-      - name: Build Arithmetic
-        if: steps.changes.outputs.Arithmetic == 'true' || steps.changes.outputs.template == 'true'
-        working-directory: Arithmetic
+      - name: Build pA
+        if: steps.changes.outputs.pA == 'true' || steps.changes.outputs.template == 'true'
+        working-directory: pA
         run: |
           tps statement
 
       - name: Merge pdfs
-        if: steps.changes.outputs.Arithmetic == 'true' || steps.changes.outputs.template == 'true'
+        if: steps.changes.outputs.pA == 'true' || steps.changes.outputs.template == 'true'
         run: |
-          mkdir -p Arithmetic/attachments
-          pdfunite Arithmetic/statement/index.pdf Arithmetic/attachments/problems.pdf
+          mkdir -p pA/attachments
+          pdfunite pA/statement/index.pdf pA/attachments/problems.pdf
 
       - name: Commit pdf and push
         run: |
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git status
-          git add Arithmetic/statement/index.pdf
-          git add Arithmetic/attachments/problems.pdf
+          git add pA/statement/index.pdf
+          git add pA/attachments/problems.pdf
           git pull
           git diff-index --quiet HEAD -- || git commit -m "Build statement"
           git push

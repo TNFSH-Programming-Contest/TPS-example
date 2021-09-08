@@ -35,16 +35,16 @@ jobs:
         id: changes
         with:
           filters: |
-            Arithmetic:
-              - 'Arithmetic/gen/**'
-              - 'Arithmetic/solution/**'
-              - 'Arithmetic/problem.json'
-              - 'Arithmetic/solutions.json'
-              - 'Arithmetic/subtasks.json'
+            pA:
+              - 'pA/gen/**'
+              - 'pA/solution/**'
+              - 'pA/problem.json'
+              - 'pA/solutions.json'
+              - 'pA/subtasks.json'
 
-      - name: Build Arithmetic
-        if: steps.changes.outputs.Arithmetic == 'true'
-        working-directory: Arithmetic
+      - name: Build pA
+        if: steps.changes.outputs.pA == 'true'
+        working-directory: pA
         run: |
           tps gen -s
           git add tests/*.in
