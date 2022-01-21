@@ -98,7 +98,7 @@ TPS預設使用[`diff -bq`](http://man.he.net/man1/diff)來檢查輸出是否正
  - gen/data: 測資產生指令，參見[TPS的說明](https://github.com/ioi-2017/tps/tree/master/docs#gendata)
  - scripts: TPS所使用的腳本
  - solution: 標程及其他解法程式碼（包含所有拿部分分的程式碼），不要跟 validator 搞混
- - solution/check.txt: 所有標程對於所有測資的執行狀況（包含是否WA、TLE），使用指令 `make pA-check`，參見[Makefile](Makefile)
+ - solutions-check.txt: 所有標程對於所有測資的執行狀況（包含是否WA、TLE），使用指令 `tps solutions`；`tps solutions | tee -a solutions-check.txt` 可同時將輸出結果同時寫入檔案
  - statement: 題本
  - statement/index.md: （TPS格式）markdown 格式的題目敘述，之後會以 pandoc 輸出成 PDF
  - statement/index.pdf: （TPS格式）用 `tps statement` 輸出的 PDF 題目敘述
