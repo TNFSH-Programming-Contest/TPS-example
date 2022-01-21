@@ -3,9 +3,21 @@
 		"verdict": "model_solution"
 	},
 	"wa.cpp": {
-		"verdict": "partially_correct"
+		"verdict": "partially_correct",
+		"except": {
+			"samples": "correct",
+			"a0": "correct",
+			"1e4": "correct",
+			"all": "incorrect"
+		}
 	},
 	"re.cpp": {
-		"verdict": "partially_correct"
+		"verdict": "partially_correct",
+		"except": {
+			"samples": "correct",
+			"a0": "correct",
+			"1e4": "correct",
+			"all": "runtime_error"
+		}
 	}
 }
