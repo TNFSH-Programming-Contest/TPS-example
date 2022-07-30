@@ -9,6 +9,8 @@ on:
       - '*/problem.json'
       - '*/subtasks.json'
       - 'template.tex'
+    tags-ignore:
+      - '**'
   workflow_dispatch:
     inputs:
         target:
