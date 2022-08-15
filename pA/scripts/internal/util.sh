@@ -5,13 +5,13 @@ function errcho {
 }
 
 function print_exit_code {
-	ret=0
+	local ret=0
 	"$@" || ret=$?
 	echo "${ret}"
 }
 
 function extension {
-	file=$1
+	local -r file="$1"; shift
 	echo "${file##*.}"
 }
 
@@ -26,7 +26,7 @@ function variable_not_exists {
 }
 
 function check_variable {
-	varname=$1
+	local -r varname="$1"; shift
 	if variable_not_exists "${varname}" ; then
 		errcho "Error: Variable '${varname}' is not set."
 		exit 1
@@ -85,13 +85,45 @@ function popdq {
 }
 
 
+function is_identifier_format {
+	local -r text="$1"; shift
+	local -r pattern='^[a-zA-Z_][a-zA-Z0-9_]*$'
+	[[ "${text}" =~ ${pattern} ]]
+}
+
+function is_unsigned_integer_format {
+	local -r text="$1"; shift
+	local -r pattern='^[0-9]+$'
+	[[ "${text}" =~ ${pattern} ]]
+}
+
+function is_signed_integer_format {
+	local -r text="$1"; shift
+	local -r pattern='^[+-]?[0-9]+$'
+	[[ "${text}" =~ ${pattern} ]]
+}
+
+function is_unsigned_decimal_format {
+	local -r text="$1"; shift
+	local -r pattern='^([0-9]+\.?[0-9]*|\.[0-9]+)$'
+	[[ "${text}" =~ ${pattern} ]]
+}
+
+function is_signed_decimal_format {
+	local -r text="$1"; shift
+	local -r pattern='^[+-]?([0-9]+\.?[0-9]*|\.[0-9]+)$'
+	[[ "${text}" =~ ${pattern} ]]
+}
+
+
 function are_same {
 	diff "$1" "$2" &> "/dev/null"
 }
 
 function recreate_dir {
-	dir=$1
+	local -r dir="$1"; shift
 	mkdir -p "${dir}"
+	local file
 	ls -A1 "${dir}" | while read file; do
 		[ -z "${file}" ] && continue
 		rm -rf "${dir}/${file}"
@@ -128,7 +160,7 @@ function unified_sort {
 
 function sensitive {
 	"$@"
-	ret=$?
+	local ret=$?
 	if [ "${ret}" -ne 0 ]; then
 		exit ${ret}
 	fi
@@ -138,7 +170,7 @@ function is_windows {
 	if variable_not_exists "OS" ; then
 		return 1
 	fi
-	echo "${OS}" | grep -iq "windows"
+	grep -iq "windows" <<< "${OS}"
 }
 
 function is_web {
@@ -156,7 +188,7 @@ function is_web {
 # cecho red -n this is a text with no new line
 
 function cecho {
-	color="$1"; shift
+	local -r color="$1"; shift
 	echo "$@" | "${PYTHON}" "${INTERNALS}/colored_cat.py" "${color}"
 }
 
@@ -167,42 +199,47 @@ function cerrcho {
 
 
 function boxed_echo {
-	color="$1"; shift
+	local -r color="$1"; shift
+	local -r text="$1"; shift
 
 	echo -n "["
-	cecho "${color}" -n "$1"
+	cecho "${color}" -n "${text}"
 	echo -n "]"
 
 	if variable_exists "BOX_PADDING" ; then
-		pad=$((BOX_PADDING - ${#1}))
+		local pad
+		pad="$((BOX_PADDING - ${#text}))"
+		readonly pad
 		hspace "${pad}"
 	fi
 }
 
 function echo_status {
-	status="$1"
+	local -r status="$1"; shift
 
+	local color
 	case "${status}" in
-		OK) color=ok ;;
-		FAIL) color=fail ;;
-		WARN) color=warn ;;
-		SKIP) color=skipped ;;
-		*) color=other ;;
+		OK) color="ok" ;;
+		FAIL) color="fail" ;;
+		WARN) color="warn" ;;
+		SKIP) color="skipped" ;;
+		*) color="other" ;;
 	esac
 
 	boxed_echo "${color}" "${status}"
 }
 
 function echo_verdict {
-	verdict="$1"
+	local -r verdict="$1"; shift
 
+	local color
 	case "${verdict}" in
-		Correct) color=ok ;;
-		Partial*) color=warn ;;
-		Wrong*|Runtime*) color=error ;;
-		Time*) color=blue ;;
-		Unknown) color=ignored ;;
-		*) color=other ;;
+		Correct) color="ok" ;;
+		Partial*) color="warn" ;;
+		Wrong*|Runtime*) color="error" ;;
+		Time*) color="blue" ;;
+		Unknown) color="ignored" ;;
+		*) color="other" ;;
 	esac
 
 	boxed_echo "${color}" "${verdict}"
@@ -210,17 +247,18 @@ function echo_verdict {
 
 
 function has_warnings {
-	local job="$1"
+	local -r job="$1"; shift
 	local WARN_FILE="${LOGS_DIR}/${job}.warn"
 	[ -s "${WARN_FILE}" ]
 }
 
-skip_status=1000
-abort_status=1001
-warn_status=250
+readonly skip_status=1000
+readonly abort_status=1001
+readonly warn_status=250
 
 function job_ret {
-	local job="$1"
+	local -r job="$1"; shift
+
 	local ret_file="${LOGS_DIR}/${job}.ret"
 	if [ -f "${ret_file}" ]; then
 		cat "${ret_file}"
@@ -234,43 +272,56 @@ function is_warning_sensitive {
 }
 
 function has_sensitive_warnings {
-	is_warning_sensitive && has_warnings "$1"
+	local -r job="$1"; shift
+	is_warning_sensitive && has_warnings "${job}"
 }
 
 function warning_aware_job_ret {
-	local job="$1"
-	local ret="$(job_ret "${job}")"
-	if [ ${ret} -ne 0 ]; then
-		echo ${ret}
+	local -r job="$1"; shift
+
+	local ret
+	ret="$(job_ret "${job}")"
+	readonly ret
+	if [ "${ret}" -ne "0" ]; then
+		echo "${ret}"
 	elif has_sensitive_warnings "${job}"; then
-		echo ${warn_status}
+		echo "${warn_status}"
 	else
-		echo 0
+		echo "0"
 	fi
 }
 
 
+# Deprecation warning:
+# Use function 'is_unsigned_decimal_format' instead.
+# Keeping this function for backward compatibility.
 function check_float {
-	echo "$1" | grep -Eq '^[0-9]+\.?[0-9]*$'
+	is_unsigned_decimal_format "$1"
 }
 
+
 function job_tlog_file {
-	local job="$1"
+	local -r job="$1"; shift
 	echo "${LOGS_DIR}/${job}.tlog"
 }
 
 function job_tlog {
-	local job="$1"; shift
-	local key="$1"
-	local tlog_file="$(job_tlog_file "${job}")"
+	local -r job="$1"; shift
+	local -r key="$1"; shift
+
+	local tlog_file
+	tlog_file="$(job_tlog_file "${job}")"
+	readonly tlog_file
 	if [ -f "${tlog_file}" ]; then
+		local line
 		local ret=0
-		local line="$(grep "^${key} " "${tlog_file}")" || ret=$?
+		line="$(grep "^${key} " "${tlog_file}")" || ret=$?
+		readonly line
 		if [ ${ret} -ne 0 ]; then
 			errcho "tlog file '${tlog_file}' does not contain key '${key}'"
 			exit 1
 		fi
-		echo "${line}" | cut -d' ' -f2-
+		cut -d' ' -f2- <<< "${line}"
 	else
 		errcho "tlog file '${tlog_file}' is not created"
 		exit 1
@@ -278,10 +329,13 @@ function job_tlog {
 }
 
 function job_status {
-	local job="$1"
-	local ret="$(job_ret "${job}")"
+	local -r job="$1"; shift
 
-	if [ "${ret}" -eq 0 ]; then
+	local ret
+	ret="$(job_ret "${job}")"
+	readonly ret
+
+	if [ "${ret}" -eq "0" ]; then
 		if has_warnings "${job}"; then
 			echo "WARN"
 		else
@@ -295,10 +349,11 @@ function job_status {
 }
 
 function guard {
-	local job="$1"; shift
-	local outlog="${LOGS_DIR}/${job}.out"
-	local errlog="${LOGS_DIR}/${job}.err"
-	local retlog="${LOGS_DIR}/${job}.ret"
+	local -r job="$1"; shift
+
+	local -r outlog="${LOGS_DIR}/${job}.out"
+	local -r errlog="${LOGS_DIR}/${job}.err"
+	local -r retlog="${LOGS_DIR}/${job}.ret"
 	export WARN_FILE="${LOGS_DIR}/${job}.warn"
 
 	echo "${abort_status}" > "${retlog}"
@@ -307,7 +362,7 @@ function guard {
 	"$@" > "${outlog}" 2> "${errlog}" || ret=$?
 	echo "${ret}" > "${retlog}"
 
-	return ${ret}
+	return "${ret}"
 }
 
 function insensitive {
@@ -315,14 +370,14 @@ function insensitive {
 }
 
 function boxed_guard {
-	local job="$1"
+	local -r job="$1"; shift
 
-	insensitive guard "$@"
+	insensitive guard "${job}" "$@"
 	echo_status "$(job_status "${job}")"
 }
 
 function execution_report {
-	local job="$1"
+	local -r job="$1"; shift
 
 	cecho yellow -n "exit-code: "
 	echo "$(job_ret "${job}")"
@@ -337,13 +392,15 @@ function execution_report {
 }
 
 function reporting_guard {
-	local job="$1"
+	local -r job="$1"; shift
 
-	boxed_guard "$@"
+	boxed_guard "${job}" "$@"
 
-	local ret="$(warning_aware_job_ret "${job}")"
+	local ret
+	ret="$(warning_aware_job_ret "${job}")"
+	readonly ret
 
-	if [ "${ret}" -ne 0 ]; then
+	if [ "${ret}" -ne "0" ]; then
 		echo
 		execution_report "${job}"
 	fi
@@ -352,23 +409,63 @@ function reporting_guard {
 }
 
 
-WARNING_TEXT_PATTERN_FOR_CPP="warning:"
-WARNING_TEXT_PATTERN_FOR_PAS="Warning:"
-WARNING_TEXT_PATTERN_FOR_JAVA="warning:"
+function initialize_failed_job_list {
+	failed_jobs_final_ret=0
+	failed_jobs_list=""
+}
+
+function add_failed_job {
+	local -r job_name="$1"; shift
+	local -r ret="$1"; shift
+	failed_jobs_final_ret="${ret}"
+	failed_jobs_list="${failed_jobs_list} ${job_name}"
+}
+
+function verify_job_failure {
+	local -r job_name="$1"; shift
+	local ret
+	ret="$(warning_aware_job_ret "${job_name}")"
+	is_in "${ret}" "0" "${skip_status}" ||
+		add_failed_job "${job_name}" "${ret}"
+}
+
+function should_stop_for_failed_jobs {
+	"${SENSITIVE_RUN}" && [ "${failed_jobs_final_ret}" -ne "0" ]
+}
+
+function stop_for_failed_jobs {
+	local job
+	for job in ${failed_jobs_list}; do
+		echo
+		cecho "fail" -n "failed job:"
+		echo " ${job}"
+		execution_report "${job}"
+	done
+	exit "${failed_jobs_final_ret}"
+}
+
+
+readonly WARNING_TEXT_PATTERN_FOR_CPP="warning:"
+readonly WARNING_TEXT_PATTERN_FOR_PAS="Warning:"
+readonly WARNING_TEXT_PATTERN_FOR_JAVA="warning:"
 
 
 MAKEFILE_COMPILE_OUTPUTS_LIST_TARGET="compile_outputs_list"
 
 function makefile_compile_outputs_list {
-	local make_dir="$1"; shift
-	make --quiet -C "${make_dir}" "${MAKEFILE_COMPILE_OUTPUTS_LIST_TARGET}"
+	local -r makefile_dir="$1"; shift
+	make --quiet -C "${makefile_dir}" "${MAKEFILE_COMPILE_OUTPUTS_LIST_TARGET}"
 }
 
 function build_with_make {
-	local make_dir="$1"; shift
-	make -j4 -C "${make_dir}" || return $?
+	local -r makefile_dir="$1"; shift
+
+	make -j4 -C "${makefile_dir}" || return $?
+
 	if variable_exists "WARN_FILE"; then
-		if compile_outputs_list=$(makefile_compile_outputs_list "${make_dir}"); then
+		local compile_outputs_list
+		if compile_outputs_list="$(makefile_compile_outputs_list "${makefile_dir}")"; then
+			local compile_output
 			for compile_output in ${compile_outputs_list}; do
 				if [[ "${compile_output}" == *.cpp.* ]] || [[ "${compile_output}" == *.cc.* ]]; then
 					local warning_text_pattern="${WARNING_TEXT_PATTERN_FOR_CPP}"
@@ -380,22 +477,22 @@ function build_with_make {
 					errcho "Could not detect the type of compile output '${compile_output}'."
 					continue
 				fi
-				if grep -q "${warning_text_pattern}" "${make_dir}/${compile_output}"; then
+				if grep -q "${warning_text_pattern}" "${makefile_dir}/${compile_output}"; then
 					echo "Text pattern '${warning_text_pattern}' found in compile output '${compile_output}':" >> "${WARN_FILE}"
-					cat "${make_dir}/${compile_output}" >> "${WARN_FILE}"
+					cat "${makefile_dir}/${compile_output}" >> "${WARN_FILE}"
 					echo "----------------------------------------------------------------------" >> "${WARN_FILE}"
 				fi
 			done
 		else
-			echo "Makefile in '${make_dir}' does not have target '${MAKEFILE_COMPILE_OUTPUTS_LIST_TARGET}'." >> "${WARN_FILE}"
+			echo "Makefile in '${makefile_dir}' does not have target '${MAKEFILE_COMPILE_OUTPUTS_LIST_TARGET}'." >> "${WARN_FILE}"
 		fi
 	fi	
-
 }
 
 
 function is_in {
-	key="$1"; shift
+	local -r key="$1"; shift
+	local item
 	for item in "$@"; do
 		if [ "${key}" == "${item}" ]; then
 			return 0
@@ -404,8 +501,24 @@ function is_in {
 	return 1
 }
 
+
+# This function gets a series of true/false arguments and prints a true/false string as their OR.
+# Natural usage: cond="$(str_or "${a}" "${b}")"
+function str_or {
+	local item
+	for item in "$@"; do
+		if [ "${item}" == "true" ]; then
+			echo "true"
+			return
+		fi
+	done
+	echo "false"
+}
+
+
 function hspace {
-	printf "%$1s" ""
+	local -r width="$1"; shift
+	printf "%${width}s" ""
 }
 
 
@@ -424,14 +537,15 @@ function decorate_lines {
 
 
 function check_any_type_file_exists {
-	test_flag="$1"; shift
-	the_problem="$1"; shift
-	file_title="$1"; shift
-	file_path="$1"; shift
-	error_prefix=""
+	local -r test_flag="$1"; shift
+	local -r the_problem="$1"; shift
+	local -r file_title="$1"; shift
+	local -r file_path="$1"; shift
+	local error_prefix=""
 	if [[ "$#" > 0 ]] ; then
 		error_prefix="$1"; shift
 	fi
+	readonly error_prefix
 
 	if [ ! -e "${file_path}" ]; then
 		errcho -ne "${error_prefix}"
@@ -463,7 +577,24 @@ function check_executable_exists {
 
 
 function command_exists {
-	command -v "$1" &> "/dev/null"
+	local -r cmd_name="$1"; shift
+	command -v "${cmd_name}" &> "/dev/null"
+}
+
+
+# Assumes that a function "usage" is defined
+function usage_exit {
+	local -r exit_code="$1"; shift
+	usage
+	exit "${exit_code}"
+}
+
+# Assumes that a function "usage" is defined
+function error_usage_exit {
+	local -r exit_code="$1"; shift
+	local -r msg="$1"; shift
+	errcho "${msg}"
+	usage_exit "${exit_code}"
 }
 
 

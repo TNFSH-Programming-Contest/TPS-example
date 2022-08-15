@@ -8,18 +8,15 @@ source "${INTERNALS}/util.sh"
 function usage {
 	errcho -ne "\
 Usage:
-  tps compile [options] <solution-path>
+  tps crun [options] <solution-path> [ -- solution-run-arguments... ]
 
 Description:
-  Compiles a solution in the sandbox.
+  Compiles and runs a solution.
 
 Options:
 \
   -h, --help
 \tShows this help.
-\
-  -v, --verbose
-\tPrints verbose details on values, decisions, and commands being executed.
 \
   -w, --warning-sensitive
 \tFails when there are warnings.
@@ -30,11 +27,25 @@ Options:
 "
 }
 
+
+compile_args=()
+run_args=()
+in_run_args="false"
+for arg in "$@"; do
+	if "${in_run_args}"; then
+		run_args+=("${arg}")
+	elif [ "${arg}" == "--" ]; then
+		in_run_args="true"
+	else
+		compile_args+=("${arg}")
+	fi
+done
+
+
 if "${HAS_GRADER}"; then
 	GRADER_TYPE="judge"
 fi
 
-VERBOSE="false"
 WARNING_SENSITIVE_RUN="false"
 
 function handle_option {
@@ -42,9 +53,6 @@ function handle_option {
 	case "${curr_arg}" in
 		-h|--help)
 			usage_exit 0
-			;;
-		-v|--verbose)
-			VERBOSE=true
 			;;
 		-w|--warning-sensitive)
 			WARNING_SENSITIVE_RUN="true"
@@ -64,38 +72,27 @@ function handle_option {
 
 function handle_positional_arg {
 	local -r curr_arg="$1"; shift
-	if variable_not_exists "SOLUTION" ; then
-		SOLUTION="${curr_arg}"
+	if variable_not_exists "solution" ; then
+		solution="${curr_arg}"
 		return
 	fi
 	invalid_arg_with_usage "${curr_arg}" "meaningless argument"
 }
 
-argument_parser "handle_positional_arg" "handle_option" "invalid_arg_with_usage" "$@"
+argument_parser "handle_positional_arg" "handle_option" "invalid_arg_with_usage" ${compile_args[@]+"${compile_args[@]}"}
 
-variable_exists "SOLUTION" ||
+variable_exists "solution" ||
 	error_usage_exit 2 "Solution is not specified."
 
-WARN_FILE="${SANDBOX}/compile.warn"
-
-export VERBOSE GRADER_TYPE WARN_FILE
-ret=0
-bash "${INTERNALS}/compile_solution.sh" "${SOLUTION}" || ret=$?
+sensitive check_file_exists "Solution file" "${solution}"
 
 
-if [ ${ret} -eq 0 ]; then
-	if [ -s "${WARN_FILE}" ] ; then
-		if is_warning_sensitive; then
-			ret="${warn_status}"
-			cecho fail "FAILED, due to sensitivity to warnings"
-		else
-			cecho warn "OK, but with warnings"
-		fi
-	else
-		cecho success "OK"
-	fi
-else
-	cecho fail "FAILED."
-fi
+{
+	recreate_dir "${LOGS_DIR}"
+	export GRADER_TYPE
+	printf "compile"
+	sensitive reporting_guard "solution.compile" bash "${INTERNALS}/compile_solution.sh" "${solution}"
+	echo
+} >&2
 
-exit ${ret}
+bash "${SANDBOX}/run.sh" ${run_args[@]+"${run_args[@]}"}

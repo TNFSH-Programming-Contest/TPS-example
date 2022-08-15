@@ -10,17 +10,9 @@ function get_time_limit {
 	"${PYTHON}" "${INTERNALS}/json_extract.py" "${PROBLEM_JSON}" "time_limit"
 }
 
-function get_test_validators {
-	local -r test_name="$1"; shift
-	local -r tests_dir="$1"; shift
-	"${PYTHON}" "${INTERNALS}/get_test_validators.py" "${test_name}" "${tests_dir}"
-}
 
-
-function get_test_validator_commands {
-	tests_dir="$1"; shift
-	test_name="$1"; shift
-	get_test_validators "${test_name}" "${tests_dir}" | while read validator_name validator_args; do
+function convert_validator_names_to_commands {
+	while read validator_name validator_args; do
 		[ -z "${validator_name}" ] && continue
 		#echo "validator_name='${validator_name}'" 
 		#echo "validator_args='${validator_args}'"
@@ -42,7 +34,7 @@ function get_test_validator_commands {
 		*.py )
 				#echo "It is Python."
 				validator_target="${VALIDATOR_DIR}/${validator_name}"
-				validator_command="${PYTHON} '${validator_target}' ${validator_args}"
+				validator_command="'${PYTHON}' '${validator_target}' ${validator_args}"
 				check_existance=true
 				;;
 		*.sh )
@@ -77,4 +69,26 @@ function get_test_validator_commands {
 		
 		echo "${validator_command}"
 	done || return $?
+}
+
+
+function get_test_validators {
+	local -r test_name="$1"; shift
+	local -r tests_dir="$1"; shift
+	"${PYTHON}" "${INTERNALS}/get_test_validators.py" "${test_name}" "${tests_dir}"
+}
+
+function get_test_validator_commands {
+	tests_dir="$1"; shift
+	test_name="$1"; shift
+	get_test_validators "${test_name}" "${tests_dir}" | convert_validator_names_to_commands || return $?
+}
+
+
+function get_global_validators {
+	"${PYTHON}" "${INTERNALS}/get_global_validators.py"
+}
+
+function get_global_validator_commands {
+	get_global_validators | convert_validator_names_to_commands || return $?
 }

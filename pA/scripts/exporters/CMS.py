@@ -64,8 +64,9 @@ make_archive = wrapped_run("make_archive", shutil.make_archive)
 
 class JSONExporter:
 
-    def __init__(self, temp_prob_dir):
+    def __init__(self, temp_prob_dir, protocol_version):
         self.temp_prob_dir = temp_prob_dir
+        self.protocol_version = protocol_version
 
     def get_absolute_path(self, path):
         return os.path.join(self.temp_prob_dir, path)
@@ -96,6 +97,61 @@ class JSONExporter:
     SOLUTION_DIR_NAME = "solutions"
 
 
+    def _get_task_type_parameters(self, task_data, task_type):
+        if self.protocol_version == 1:
+            task_type_params = task_data.get("type_params", {})
+
+            if task_type == "Communication":
+                num_processes = task_data.get("num_processes")
+                if num_processes is not None:
+                    task_type_params["task_type_parameters_Communication_num_processes"] = num_processes
+
+            if task_type == "Batch":
+                HAS_GRADER = get_bool_environ("HAS_GRADER")
+                if HAS_GRADER:
+                    compilation_type = "grader"
+                else:
+                    compilation_type = "alone"
+                task_type_params["task_type_parameters_Batch_compilation"] = compilation_type
+
+            return json.dumps(task_type_params)
+
+        # self.protocol_version > 1
+
+        if "task_type_parameters" in task_data:
+            # Task type parameters list is manually set in PROBLEM_JSON.
+            return task_data["task_type_parameters"]
+
+        HAS_GRADER = get_bool_environ("HAS_GRADER")
+        HAS_CHECKER = get_bool_environ('HAS_CHECKER')
+        evaluation_type = "comparator" if HAS_CHECKER else "diff"
+
+        if task_type == 'Batch':
+            compilation = "grader" if HAS_GRADER else "alone"
+            input_filename = ""
+            output_filename = ""
+            return [
+                compilation,
+                [input_filename, output_filename,],
+                evaluation_type,
+            ]
+
+        if task_type == 'Communication':
+            num_processes = task_data.get("num_processes", 1)
+            compilation = "stub" if HAS_GRADER else "alone"
+            user_io = task_data.get("user_io", "fifo_io")
+            return [
+                num_processes,
+                compilation,
+                user_io,
+            ]
+
+        if task_type == 'TwoSteps' or task_type == 'OutputOnly':
+            return [evaluation_type]
+
+        return []
+
+
     def export_problem_global_data(self):
         json_file = "problem.json"
         vp.print("Writing '{}'...".format(json_file))
@@ -105,30 +161,19 @@ class JSONExporter:
         task_type = task_data["type"]
         vp.print_var("task_type", task_type)
 
-        task_type_params = task_data.get("type_params", {})
-
-        if task_type == "Communication":
-            num_processes = task_data.get("num_processes")
-            if num_processes is not None:
-                task_type_params["task_type_parameters_Communication_num_processes"] = num_processes
-
-        if task_type == "Batch":
-            HAS_GRADER = get_bool_environ("HAS_GRADER")
-            if HAS_GRADER:
-                compilation_type = "grader"
-            else:
-                compilation_type = "alone"
-            task_type_params["task_type_parameters_Batch_compilation"] = compilation_type
-
         problem_data_dict = {
+            "protocol_version": self.protocol_version,
             "code": task_data["name"],
             "name": task_data["title"],
             "time_limit": task_data["time_limit"],
             "memory_limit": task_data["memory_limit"]*1024*1024,
             "score_precision": task_data.get("score_precision", 2),
             "task_type": task_type,
-            "task_type_params": json.dumps(task_type_params),
+            "task_type_params": self._get_task_type_parameters(task_data, task_type),
         }
+
+        if "score_mode" in task_data:
+            problem_data_dict["score_mode"] = task_data["score_mode"]
 
         problem_data_str = json.dumps(problem_data_dict)
         vp.print_var(json_file, problem_data_str)
@@ -337,18 +382,19 @@ def get_archive_format_names():
     return [f[0] for f in get_archive_formats()]
 
 
-def export(file_name, archive_format):
+def export(file_name, archive_format, protocol_version):
     """
     returns the export file name
     """
     vp.print("Exporting '{}' with archive format '{}'...".format(file_name, archive_format))
+    vp.print_var("protocol_version", protocol_version)
     with tempfile.TemporaryDirectory(prefix=file_name) as temp_root:
         vp.print_var("temp_root", temp_root)
         temp_prob_dir_name = PROBLEM_NAME
         temp_prob_dir = os.path.join(temp_root, temp_prob_dir_name)
         mkdir(temp_prob_dir)
 
-        JSONExporter(temp_prob_dir).export()
+        JSONExporter(temp_prob_dir, protocol_version).export()
 
         if archive_format == NO_ARCHIVE_FORMAT:
             final_export_file = move(
@@ -399,6 +445,19 @@ def main():
         formatter_class=argparse.RawTextHelpFormatter,
     )
     parser.add_argument(
+        'protocol_version',
+        metavar='<protocol-version>',
+        type=int,
+        choices=[1, 2],
+        help="""\
+The protocol version of the exported package
+Currently available versions:
+1  The traditionally-used protocol (used up to 2022).
+2  Supports more flexible setting of task type parameters (defined in 2022).
+Make sure the target CMS server supports the specified protocol version.
+"""
+    )
+    parser.add_argument(
         "-v", "--verbose",
         action="store_true",
         help="Prints verbose details on values, decisions, and commands being executed.",
@@ -426,7 +485,7 @@ Default archive format is '%(default)s'.
     file_name = args.output_name if args.output_name else create_export_file_name()
 
     try:
-        export_file = export(file_name, args.archive_format)
+        export_file = export(file_name, args.archive_format, args.protocol_version)
         if warnings:
             cprint(colors.WARN, "Successfully exported to '{}', but with warnings.".format(export_file))
         else:
