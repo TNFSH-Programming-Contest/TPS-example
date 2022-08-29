@@ -1,8 +1,8 @@
 {
-	"contest_name": "TODO: 競賽名稱",
-	"problem_label": "TODO: A-G?",
-	"name": "TODO:_English_short_name",
-	"title": "TODO: 題目名稱",
+	"contest_name": "TPS範例題目",
+	"problem_label": "B",
+	"name": "pB",
+	"title": "浮點誤差但不使用checker",
 	"memory_limit": 512,
 	"time_limit": 1.0,
 	"type": "Batch",
@@ -18,6 +18,6 @@
 	"score_mode": "max_subtask",
 	"task_type": "Batch",
 	"task_type_params": "{\"task_type_parameters_Batch_compilation\": \"alone\"}",
-	"has_checker": true,
+	"has_checker": false,
 	"score_type": "GroupMin"
 }

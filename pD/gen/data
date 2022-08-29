@@ -1,0 +1,17 @@
+@subtask samples
+manual example-1.in
+
+@subtask n10
+gen	10 inhfy
+gen	10 gyqmt
+gen	10 hurzh
+
+@subtask n100
+gen	100 swsmo
+gen	100 jgysh
+gen	100 brdmy
+
+@subtask full
+gen	1000 qgqvf
+gen	1000 blyqj
+gen	1000 fucxx

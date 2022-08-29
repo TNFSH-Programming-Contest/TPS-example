@@ -4,6 +4,9 @@
 	"files.associations": {
 		"*.snap": "javascript",
 		"vector": "cpp",
-		"ostream": "cpp"
+		"ostream": "cpp",
+		"iostream": "cpp",
+		"ios": "cpp",
+		"xiosbase": "cpp"
 	}
 }

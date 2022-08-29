@@ -3,12 +3,10 @@
 		"verdict": "model_solution"
 	},
 	"correct2.cpp": {
-		"verdict": "correct"
-	},
-	"not_even.cpp": {
-		"verdict": "incorrect"
-	},
-	"not_in_range.cpp": {
-		"verdict": "incorrect"
+		"verdict": "incorrect",
+		"except": {
+			"samples": "correct",
+			"simple": "correct"
+		}
 	}
 }
