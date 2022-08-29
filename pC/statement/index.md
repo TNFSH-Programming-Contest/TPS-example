@@ -15,12 +15,10 @@
 輸出 $A * B / C$。
 
 ## 輸入限制
- - $0 \le A, B, C \leq 1000$
+ - $0 \le A, B, C \leq 10^{12}$
 
 ## 子任務
 \subtasks
-
-\clearpage
 
 ## 範例輸入
 \testfile{0-01.in}
