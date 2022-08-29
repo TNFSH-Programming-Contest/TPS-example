@@ -5,7 +5,7 @@
 	"correct2.cpp": {
 		"verdict": "correct"
 	},
-	"not_evan.cpp": {
+	"not_even.cpp": {
 		"verdict": "incorrect"
 	},
 	"not_in_range.cpp": {
