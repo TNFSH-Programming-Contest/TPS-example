@@ -1,16 +1,16 @@
 correct1.cpp
 solution            compile[OK]
 checker             compile[OK]
-0-01                sol[OK]    0.016     check[OK]        1  [Correct]             
-1-01                sol[OK]    0.015     check[OK]        1  [Correct]             
-1-02                sol[OK]    0.016     check[OK]        1  [Correct]             
-1-03                sol[OK]    0.016     check[OK]        1  [Correct]             
-2-01                sol[OK]    0.016     check[OK]        1  [Correct]             
-2-02                sol[OK]    0.015     check[OK]        1  [Correct]             
-2-03                sol[OK]    0.015     check[OK]        1  [Correct]             
-3-01                sol[OK]    0.014     check[OK]        1  [Correct]             
-3-02                sol[OK]    0.014     check[OK]        1  [Correct]             
-3-03                sol[OK]    0.016     check[OK]        1  [Correct]             
+0-01                sol[OK]    0.014     check[OK]        1  [Correct]             
+1-01                sol[OK]    0.013     check[OK]        1  [Correct]             
+1-02                sol[OK]    0.014     check[OK]        1  [Correct]             
+1-03                sol[OK]    0.014     check[OK]        1  [Correct]             
+2-01                sol[OK]    0.015     check[OK]        1  [Correct]             
+2-02                sol[OK]    0.014     check[OK]        1  [Correct]             
+2-03                sol[OK]    0.013     check[OK]        1  [Correct]             
+3-01                sol[OK]    0.013     check[OK]        1  [Correct]             
+3-02                sol[OK]    0.013     check[OK]        1  [Correct]             
+3-03                sol[OK]    0.014     check[OK]        1  [Correct]             
 samples             [1/1 tests]    [Correct]             [0/0 pts]      [match with expected]             0-01
 n10                 [3/3 tests]    [Correct]             [20/20 pts]    [match with expected]             1-01
 n100                [3/3 tests]    [Correct]             [30/30 pts]    [match with expected]             2-01
@@ -24,16 +24,16 @@ Finished.
 correct2.cpp
 solution            compile[OK]
 checker             compile[OK]
-0-01                sol[OK]    0.018     check[OK]        1  [Correct]             
-1-01                sol[OK]    0.015     check[OK]        1  [Correct]             
-1-02                sol[OK]    0.020     check[OK]        1  [Correct]             
-1-03                sol[OK]    0.015     check[OK]        1  [Correct]             
-2-01                sol[OK]    0.015     check[OK]        1  [Correct]             
-2-02                sol[OK]    0.016     check[OK]        1  [Correct]             
-2-03                sol[OK]    0.015     check[OK]        1  [Correct]             
-3-01                sol[OK]    0.015     check[OK]        1  [Correct]             
-3-02                sol[OK]    0.014     check[OK]        1  [Correct]             
-3-03                sol[OK]    0.014     check[OK]        1  [Correct]             
+0-01                sol[OK]    0.012     check[OK]        1  [Correct]             
+1-01                sol[OK]    0.012     check[OK]        1  [Correct]             
+1-02                sol[OK]    0.012     check[OK]        1  [Correct]             
+1-03                sol[OK]    0.013     check[OK]        1  [Correct]             
+2-01                sol[OK]    0.013     check[OK]        1  [Correct]             
+2-02                sol[OK]    0.012     check[OK]        1  [Correct]             
+2-03                sol[OK]    0.014     check[OK]        1  [Correct]             
+3-01                sol[OK]    0.013     check[OK]        1  [Correct]             
+3-02                sol[OK]    0.013     check[OK]        1  [Correct]             
+3-03                sol[OK]    0.013     check[OK]        1  [Correct]             
 samples             [1/1 tests]    [Correct]             [0/0 pts]      [match with expected]             0-01
 n10                 [3/3 tests]    [Correct]             [20/20 pts]    [match with expected]             1-01
 n100                [3/3 tests]    [Correct]             [30/30 pts]    [match with expected]             2-01
@@ -44,20 +44,41 @@ Subtask summary
 
 Finished.
 
-not_evan.cpp
+not_even.cpp
+solution            compile[OK]
+checker             compile[OK]
+0-01                sol[OK]    0.014     check[OK]        1  [Correct]             
+1-01                sol[OK]    0.013     check[OK]        0  [Wrong Answer]        
+1-02                sol[OK]    0.014     check[OK]        1  [Correct]             
+1-03                sol[OK]    0.012     check[OK]        1  [Correct]             
+2-01                sol[OK]    0.013     check[OK]        1  [Correct]             
+2-02                sol[OK]    0.014     check[OK]        0  [Wrong Answer]        
+2-03                sol[OK]    0.013     check[OK]        1  [Correct]             
+3-01                sol[OK]    0.012     check[OK]        1  [Correct]             
+3-02                sol[OK]    0.015     check[OK]        0  [Wrong Answer]        
+3-03                sol[OK]    0.012     check[OK]        1  [Correct]             
+samples             [1/1 tests]    [Correct]             [0/0 pts]      [expected: incorrect]             0-01
+n10                 [3/3 tests]    [Wrong Answer]        [0/20 pts]     [match with expected]             1-01
+n100                [3/3 tests]    [Wrong Answer]        [0/30 pts]     [match with expected]             2-02
+full                [3/3 tests]    [Wrong Answer]        [0/50 pts]     [match with expected]             3-02
+
+Subtask summary
+0/100 pts
+
+Finished.
 
 not_in_range.cpp
 solution            compile[OK]
 checker             compile[OK]
-0-01                sol[OK]    0.014     check[OK]        0  [Wrong Answer]        
-1-01                sol[OK]    0.015     check[OK]        0  [Wrong Answer]        
-1-02                sol[OK]    0.015     check[OK]        0  [Wrong Answer]        
-1-03                sol[OK]    0.015     check[OK]        0  [Wrong Answer]        
-2-01                sol[OK]    0.014     check[OK]        0  [Wrong Answer]        
+0-01                sol[OK]    0.013     check[OK]        0  [Wrong Answer]        
+1-01                sol[OK]    0.013     check[OK]        0  [Wrong Answer]        
+1-02                sol[OK]    0.013     check[OK]        0  [Wrong Answer]        
+1-03                sol[OK]    0.014     check[OK]        0  [Wrong Answer]        
+2-01                sol[OK]    0.013     check[OK]        0  [Wrong Answer]        
 2-02                sol[OK]    0.013     check[OK]        0  [Wrong Answer]        
-2-03                sol[OK]    0.015     check[OK]        0  [Wrong Answer]        
-3-01                sol[OK]    0.015     check[OK]        0  [Wrong Answer]        
-3-02                sol[OK]    0.014     check[OK]        0  [Wrong Answer]        
+2-03                sol[OK]    0.012     check[OK]        0  [Wrong Answer]        
+3-01                sol[OK]    0.013     check[OK]        0  [Wrong Answer]        
+3-02                sol[OK]    0.013     check[OK]        0  [Wrong Answer]        
 3-03                sol[OK]    0.014     check[OK]        0  [Wrong Answer]        
 samples             [1/1 tests]    [Wrong Answer]        [0/0 pts]      [match with expected]             0-01
 n10                 [3/3 tests]    [Wrong Answer]        [0/20 pts]     [match with expected]             1-01
