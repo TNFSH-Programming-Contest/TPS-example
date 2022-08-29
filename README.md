@@ -1,5 +1,7 @@
 # TPS範例題目
 
+此處說明已搬遷到 https://wiki.tfcis.org/TPS
+
 ## Quick Links
 [problems.pdf](pA/attachments/problems.pdf)
 
@@ -9,4 +11,6 @@
 | B | [statement](pB/statement) [md](pB/statement/index.md) [pdf](pB/statement/index.pdf) | [gen](pB/gen) | [validator](pB/validator) | [solution](pB/solution) [check](pB/solutions-check.txt) | [tests](pB/tests) | [problem](pB/problem.json) [solutions](pB/solutions.json) [subtasks](pB/subtasks.json) |
 <!-- new problem -->
 
-此處說明已搬遷到 https://wiki.tfcis.org/TPS
+## Subtasks
+<!-- subtasks start -->
+<!-- subtasks end -->

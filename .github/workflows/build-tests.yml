@@ -24,10 +24,10 @@ on:
 
 jobs:
   problem-list:
-     runs-on: ubuntu-latest
-     outputs:
-        matrix: ${{ steps.problem-list.outputs.matrix }}
-     steps:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.problem-list.outputs.matrix }}
+    steps:
       - uses: actions/checkout@v3
 
       - name: Read problems
@@ -133,7 +133,7 @@ jobs:
           fi
 
       - name: Remove flags if auto build disabled
-        if: hashFiles(format('p{0}/tests/DISABLE_AUTO_BUILD', matrix.problem)) != ''
+        if: hashFiles(format('p{0}/gen/DISABLE_AUTO_BUILD', matrix.problem)) != ''
         run: |
           rm -f /home/runner/flags/build-tests/${{ matrix.problem }}
           rm -f /home/runner/flags/build-input/${{ matrix.problem }}
@@ -243,6 +243,7 @@ jobs:
     needs: check-post
     if: always() && needs.check-post.outputs.build-tests != '[]'
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     strategy:
       matrix:
         problem: ${{ fromJson(needs.check-post.outputs.build-tests) }}

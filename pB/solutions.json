@@ -1,5 +1,14 @@
 {
-	"correct.cpp": {
+	"correct1.cpp": {
 		"verdict": "model_solution"
+	},
+	"correct2.cpp": {
+		"verdict": "correct"
+	},
+	"not_evan.cpp": {
+		"verdict": "incorrect"
+	},
+	"not_in_range.cpp": {
+		"verdict": "incorrect"
 	}
 }

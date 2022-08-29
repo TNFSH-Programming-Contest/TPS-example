@@ -6,18 +6,18 @@
 \caption{TODO: 圖片說明}
 \end{figure} -->
 
-TODO: 題目敘述
+輸出兩個數值間的任何一個偶數。
 
 \clearpage
 
 ## 輸入
-TODO: 輸入說明
+第一行有兩個整數 $A, B$。
 
 ## 輸出
-TODO: 輸出說明
+輸出 $A$ 和 $B$ 間任何一個偶數。
 
 ## 輸入限制
- - TODO: 輸入限制
+ - $0 \leq A, B \leq 1000$
 
 ## 子任務
 \subtasks

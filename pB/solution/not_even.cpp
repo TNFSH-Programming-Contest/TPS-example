@@ -2,9 +2,10 @@
 using namespace std;
 
 int main() {
-	// TODO
-	int n;
-	cin >> n;
-	cout << 0 << endl;
+	int a, b;
+	cin >> a >> b;
+
+	cout << a << endl;
+
 	return 0;
 }

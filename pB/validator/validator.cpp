@@ -8,7 +8,9 @@ int main() {
 	// about testlib, see https://codeforces.com/blog/entry/18291
 
 	// TODO
-	inf.readInt(1, MAXN, "n");
+	inf.readInt(0, MAXN, "A");
+	inf.readSpace();
+	inf.readInt(0, MAXN, "B");
 	inf.readEoln();
 	inf.readEof();
 
