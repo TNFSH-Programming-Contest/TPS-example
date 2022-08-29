@@ -18,5 +18,7 @@
 | | 1 | 2 | 3 |
 | --- | --- | --- | --- |
 | A | 20<br>$A = 0$、$1 \leq B \leq 10^{4}$ | 30<br>$0 \leq A, B \leq 10^{4}$ | 50<br>無額外限制 |
-| B | 20<br>$A, B \leq 10$ | 30<br>$A, B \leq 100$ | 50<br>無額外限制 |
+| B | 20<br>Simple tests | 80<br>Hacked tests |
+| C | 20<br>Simple tests | 80<br>Hacked tests |
+| D | 20<br>$A, B \leq 10$ | 30<br>$A, B \leq 100$ | 50<br>無額外限制 |
 <!-- subtasks end -->
