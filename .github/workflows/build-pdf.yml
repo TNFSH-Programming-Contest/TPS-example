@@ -11,8 +11,9 @@ on:
       - '*/statement/index.md'
       - '*/problem.json'
       - '*/subtasks.json'
-      - 'template.tex'
+      - 'appendix.tex'
       - 'cover.tex'
+      - 'template.tex'
   workflow_dispatch:
     inputs:
       problems:
@@ -29,4 +30,3 @@ jobs:
     with:
       problems: ${{ inputs.problems }}
       merge: ${{ inputs.merge && fromJson(inputs.merge) || false }}
-      runs-on: self-hosted
