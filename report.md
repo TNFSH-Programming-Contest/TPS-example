@@ -1,6 +1,7 @@
 
 ## Progress
 <!-- progress start -->
+
 - cover.tex [:white_check_mark:](cover.tex)
 - appendix.tex [:x:](appendix.tex)
 
@@ -20,20 +21,24 @@
 | tests | [:white_check_mark:](pA/tests) | [:white_check_mark:](pB/tests) | [:white_check_mark:](pC/tests) | [:white_check_mark:](pD/tests) |
 | statement/index.md | [:white_check_mark:](pA/statement/index.md) | [:x:](pB/statement/index.md) | [:x:](pC/statement/index.md) | [:x:](pD/statement/index.md) |
 | statement/index.pdf | [:white_check_mark:](pA/statement/index.pdf) | [:white_check_mark:](pB/statement/index.pdf) | [:white_check_mark:](pC/statement/index.pdf) | [:white_check_mark:](pD/statement/index.pdf) |
+
 <!-- progress end -->
 
 ## Subtasks
 <!-- subtasks start -->
+
 | | 1 | 2 | 3 |
 | --- | --- | --- | --- |
 | A | 20<br>$A = 0$、$1 \leq B \leq 10^{4}$ | 30<br>$0 \leq A, B \leq 10^{4}$ | 50<br>無額外限制 |
 | B | 20<br>Simple tests | 80<br>Hacked tests |
 | C | 20<br>Simple tests | 80<br>Hacked tests |
 | D | 20<br>$A, B \leq 10$ | 30<br>$A, B \leq 100$ | 50<br>無額外限制 |
+
 <!-- subtasks end -->
 
 ## Scores
 <!-- scores start -->
+
 | score | count | groups |
 | --- | --- | --- |
 | 20 | 4 | (A1) (B1) (C1) (D1) |
@@ -54,4 +59,5 @@
 | 180 | 6 | (A3, B2, D3) (A3, C2, D3) (A1, B2, C2) (B1, B2, C2) (B2, C1, C2) (B2, C2, D1) |
 | 190 | 2 | (A2, B2, C2) (B2, C2, D2) |
 | 210 | 2 | (A3, B2, C2) (B2, C2, D3) |
+
 <!-- scores end -->
